@@ -1,0 +1,128 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+/* Transaction class */
+class Transaction {
+public:
+    string type;
+    double amount;
+
+    Transaction(string t, double a) {
+        type = t;
+        amount = a;
+    }
+};
+
+/* Account class */
+class Account {
+private:
+    int accountNumber;
+    double balance;
+    vector<Transaction> history;
+
+public:
+    Account(int accNo) {
+        accountNumber = accNo;
+        balance = 0.0;
+    }
+
+    void deposit(double amt) {
+        balance += amt;
+        history.push_back(Transaction("Deposit", amt));
+        cout << "Deposit successful.\n";
+    }
+
+    void withdraw(double amt) {
+        if (amt > balance) {
+            cout << "Insufficient balance.\n";
+        } else {
+            balance -= amt;
+            history.push_back(Transaction("Withdrawal", amt));
+            cout << "Withdrawal successful.\n";
+        }
+    }
+
+    void transfer(Account &toAcc, double amt) {
+        if (amt > balance) {
+            cout << "Insufficient balance for transfer.\n";
+        } else {
+            balance -= amt;
+            toAcc.balance += amt;
+
+            history.push_back(Transaction("Transfer Sent", amt));
+            toAcc.history.push_back(Transaction("Transfer Received", amt));
+
+            cout << "Fund transfer successful.\n";
+        }
+    }
+
+    void displayAccountInfo() {
+        cout << "Balance: " << balance << endl;
+        cout << "Transaction Details:\n";
+        for (auto t : history) {
+            cout << t.type << " : " << t.amount << endl;
+        }
+    }
+};
+
+/* Customer class */
+class Customer {
+public:
+    string name;
+    Account account;
+
+    Customer(string n, int accNo) : account(accNo) {
+        name = n;
+    }
+
+    void displayDetails() {
+        cout << "\nCustomer Name: " << name << endl;
+        account.displayAccountInfo();
+    }
+};
+
+int main() {
+    string name1, name2;
+    int acc1, acc2;
+    double amt;
+
+    // Create customers and accounts (USER INPUT)
+    cout << "Enter first customer name: ";
+    cin >> name1;
+    cout << "Enter first customer account number: ";
+    cin >> acc1;
+
+    cout << "Enter second customer name: ";
+    cin >> name2;
+    cout << "Enter second customer account number: ";
+    cin >> acc2;
+
+    Customer c1(name1, acc1);
+    Customer c2(name2, acc2);
+
+    // Deposit
+    cout << "Enter deposit amount for first customer: ";
+    cin >> amt;
+    c1.account.deposit(amt);
+
+    // Withdrawal
+    cout << "Enter withdrawal amount for first customer: ";
+    cin >> amt;
+    c1.account.withdraw(amt);
+
+    // Fund transfer
+    cout << "Enter transfer amount from first to second customer: ";
+    cin >> amt;
+    c1.account.transfer(c2.account, amt);
+
+    // Display account info and transaction details
+    cout << "\n--- First Customer Details ---\n";
+    c1.displayDetails();
+
+    cout << "\n--- Second Customer Details ---\n";
+    c2.displayDetails();
+
+    return 0;
+}

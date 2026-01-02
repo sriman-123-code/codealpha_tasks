@@ -1,0 +1,75 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+// Simple password hashing (academic purpose)
+string hashPassword(string password) {
+    string hashed = "";
+    for (char c : password) {
+        hashed += c + 2;
+    }
+    return hashed;
+}
+
+void registerUser() {
+    string username, password;
+    cout << "\n--- Registration ---\n";
+    cout << "Enter username: ";
+    cin >> username;
+    cout << "Enter password: ";
+    cin >> password;
+
+    ifstream check(username + ".txt");
+    if (check.is_open()) {
+        cout << "Error: Username already exists.\n";
+        check.close();
+        return;
+    }
+    check.close();
+
+    ofstream fout(username + ".txt");
+    fout << username << endl;
+    fout << hashPassword(password) << endl;
+    fout.close();
+
+    cout << "Registration successful.\n";
+}
+
+void loginUser() {
+    string username, password, u, p;
+    cout << "\n--- Login ---\n";
+    cout << "Enter username: ";
+    cin >> username;
+    cout << "Enter password: ";
+    cin >> password;
+
+    ifstream fin(username + ".txt");
+    if (!fin.is_open()) {
+        cout << "Error: User not found.\n";
+        return;
+    }
+
+    fin >> u >> p;
+    fin.close();
+
+    if (u == username && p == hashPassword(password))
+        cout << "Login successful.\n";
+    else
+        cout << "Invalid password.\n";
+}
+
+int main() {
+    char choice;
+    cout << "Enter R for Registration or L for Login: ";
+    cin >> choice;
+
+    if (choice == 'R' || choice == 'r')
+        registerUser();
+    else if (choice == 'L' || choice == 'l')
+        loginUser();
+    else
+        cout << "Invalid choice.\n";
+
+    return 0;
+}

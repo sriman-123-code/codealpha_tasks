@@ -1,0 +1,89 @@
+import java.util.Scanner;
+
+public class HotelReservationSystem {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        boolean[] rooms = new boolean[5];
+
+        while (true) {
+
+            System.out.println("\nHOTEL RESERVATION SYSTEM");
+            System.out.println("1. View Available Rooms");
+            System.out.println("2. Make Reservation");
+            System.out.println("3. View Bookings");
+            System.out.println("4. Cancel Reservation");
+            System.out.println("5. Exit");
+            System.out.print("Enter Choice: ");
+
+            int choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1:
+                    System.out.println("Available Rooms:");
+                    for (int i = 0; i < rooms.length; i++) {
+                        if (!rooms[i]) {
+                            System.out.println("Room " + (i + 1));
+                        }
+                    }
+                    break;
+
+                case 2:
+                    System.out.print("Enter Room Number (1-5): ");
+                    int book = sc.nextInt();
+
+                    if (book >= 1 && book <= 5) {
+                        if (!rooms[book - 1]) {
+                            rooms[book - 1] = true;
+                            System.out.println("Reservation Successful");
+                        } else {
+                            System.out.println("Room Already Booked");
+                        }
+                    } else {
+                        System.out.println("Invalid Room Number");
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Booked Rooms:");
+                    boolean found = false;
+
+                    for (int i = 0; i < rooms.length; i++) {
+                        if (rooms[i]) {
+                            System.out.println("Room " + (i + 1));
+                            found = true;
+                        }
+                    }
+
+                    if (!found) {
+                        System.out.println("No Bookings Found");
+                    }
+                    break;
+
+                case 4:
+                    System.out.print("Enter Room Number to Cancel: ");
+                    int cancel = sc.nextInt();
+
+                    if (cancel >= 1 && cancel <= 5) {
+                        if (rooms[cancel - 1]) {
+                            rooms[cancel - 1] = false;
+                            System.out.println("Reservation Cancelled");
+                        } else {
+                            System.out.println("Room Not Booked");
+                        }
+                    } else {
+                        System.out.println("Invalid Room Number");
+                    }
+                    break;
+
+                case 5:
+                    System.out.println("Thank You");
+                    System.exit(0);
+
+                default:
+                    System.out.println("Invalid Choice");
+            }
+        }
+    }
+}

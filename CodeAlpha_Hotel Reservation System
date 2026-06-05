@@ -1,0 +1,94 @@
+import java.util.*;
+
+class Room {
+    int number;
+    String type;
+    int price;
+    boolean booked;
+
+    Room(int number, String type, int price) {
+        this.number = number;
+        this.type = type;
+        this.price = price;
+        this.booked = false;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        Room[] rooms = {
+            new Room(101, "Single", 1000),
+            new Room(102, "Double", 2000),
+            new Room(103, "Deluxe", 3500)
+        };
+
+        while (true) {
+            System.out.println("\n===== HOTEL MANAGEMENT SYSTEM =====");
+            System.out.println("1. View Rooms");
+            System.out.println("2. Book Room");
+            System.out.println("3. Check Availability");
+            System.out.println("4. Exit");
+            System.out.print("Enter Choice: ");
+
+            int choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1:
+                    System.out.println("\nRoom List:");
+                    for (Room r : rooms) {
+                        System.out.println(r.number + " - " + r.type + " - Rs." + r.price);
+                    }
+                    break;
+
+                case 2:
+                    System.out.print("Enter Room Number: ");
+                    int rn = sc.nextInt();
+
+                    boolean found = false;
+
+                    for (Room r : rooms) {
+                        if (r.number == rn) {
+                            found = true;
+
+                            if (r.booked) {
+                                System.out.println("Sorry! Room already booked.");
+                            } else {
+                                System.out.print("Enter Number of Days: ");
+                                int days = sc.nextInt();
+
+                                int total = days * r.price;
+                                r.booked = true;
+
+                                System.out.println("Room Booked Successfully!");
+                                System.out.println("Total Cost: Rs." + total);
+                            }
+                        }
+                    }
+
+                    if (!found) {
+                        System.out.println("Invalid Room Number!");
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("\nAvailability Status:");
+                    for (Room r : rooms) {
+                        System.out.println(r.number + " - " +
+                                (r.booked ? "Booked" : "Available"));
+                    }
+                    break;
+
+                case 4:
+                    System.out.println("Thank You for Visiting Our Hotel!");
+                    return;
+
+                default:
+                    System.out.println("Invalid Choice!");
+            }
+        }
+    }
+}
